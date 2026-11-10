@@ -7,14 +7,13 @@
 
   /* ---------- Router ---------- */
   function parseRoute() {
-    var h = location.hash.replace(/^#\/?/, "").split("?")[0];
-    var p = h.split("/");
-    switch (p[0]) {
-      case "lesson": return { name: "lesson", id: decodeURIComponent(p[1] || "") };
-      case "review": return { name: "review" };
+    var h = decodeURIComponent(location.hash.replace(/^#/, ""));
+    if (h.indexOf("bai-") === 0) return { name: "lesson", id: h.slice(4) };
+    switch (h) {
+      case "on-tap": return { name: "review" };
       case "pinyin": return { name: "pinyin" };
-      case "write": return { name: "write" };
-      case "settings": return { name: "settings" };
+      case "luyen-viet": return { name: "write" };
+      case "cai-dat": return { name: "settings" };
       default: return { name: "home" };
     }
   }
@@ -32,7 +31,7 @@
       }
     } catch (e) {
       if (window.console) console.error(e);
-      html = '<section class="page"><h1>Có lỗi xảy ra</h1><p>' + CC.esc(e.message) + '</p><p><a class="btn primary" href="#/">Về trang chủ</a></p></section>';
+      html = '<section class="page"><h1>Có lỗi xảy ra</h1><p>' + CC.esc(e.message) + '</p><p><a class="btn primary" href="#hoc">Về trang chủ</a></p></section>';
     }
     app.innerHTML = html;
     window.scrollTo(0, keepScroll ? y : 0);
@@ -85,8 +84,7 @@
 
   /* ---------- Modal luyện viết ---------- */
   function openWrite(el) {
-    var q = el.dataset.set ? "bo=" + encodeURIComponent(el.dataset.set) : "chu=" + encodeURIComponent(el.dataset.chars || "");
-    var url = "../tools/luyen-viet/index.html?" + q + "&che-do=to";
+    var url = CC.writeUrl(el.dataset.set ? { set: el.dataset.set } : { chars: el.dataset.chars || "" });
     modal.innerHTML = '<div class="modal-back" data-act="close-modal"><div class="modal" role="dialog" aria-modal="true" aria-label="Luyện viết chữ Hán">' +
       '<button type="button" class="modal-close" data-act="close-modal" aria-label="Đóng">×</button>' +
       '<iframe src="' + CC.esc(url) + '" title="Trang luyện viết chữ Hán"></iframe></div></div>';
@@ -116,7 +114,7 @@
     CC.completeLesson(id, null);
     CC.toast("Đã hoàn thành bài và thêm từ vựng vào bộ thẻ ôn.");
     var o = CC.order(), i = o.indexOf(id);
-    go(i !== -1 && i < o.length - 1 ? "#/lesson/" + o[i + 1] : "#/");
+    go(i !== -1 && i < o.length - 1 ? "#bai-" + o[i + 1] : "#hoc");
   }
 
   function answer(q, ok, pick) {
@@ -181,14 +179,26 @@
     render(true);
   }
 
-  function download(name, text) {
-    var blob = new Blob([text], { type: "application/json" });
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  function copyText(text) {
+    var done = function () { CC.toast("Đã sao chép vào bộ nhớ tạm."); };
+    var fallback = function () {
+      var ta = document.getElementById("export-text");
+      if (ta) { ta.focus(); ta.select(); }
+      CC.toast("Hãy nhấn Ctrl/⌘ + C để sao chép đoạn đã chọn.");
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    } catch (e) { fallback(); }
+  }
+
+  function importText(text) {
+    try {
+      CC.importJSON(text);
+      CC.L = null; CC.R = null; CC.ui.exportOpen = false; CC.applySettings();
+      CC.toast("Đã nhập tiến độ.");
+      render();
+    } catch (err) { CC.toast("Không nhập được: " + err.message); }
   }
 
   /* ---------- Sự kiện click ---------- */
@@ -284,7 +294,7 @@
         var sc = CC.views.scoreOf(CC.L.ex);
         CC.completeLesson(CC.L.id, sc.pct);
         CC.toast("Đã đánh dấu hoàn thành. Nhớ quay lại làm lại bài tập nhé!");
-        go("#/");
+        go("#hoc");
         break;
       }
 
@@ -296,13 +306,24 @@
       case "rv-end": case "rv-reset": CC.R = null; CC.tts.stop(); render(); break;
 
       /* Dữ liệu */
-      case "export": download("china-course-tien-do.json", CC.exportJSON()); break;
+      case "export": CC.ui.exportOpen = !CC.ui.exportOpen; render(true); break;
+      case "copy-export": copyText(CC.exportJSON()); break;
+      case "import-text": {
+        var box = document.getElementById("import-text");
+        if (box && box.value.trim()) importText(box.value); else CC.toast("Hãy dán nội dung tiến độ vào ô trước.");
+        break;
+      }
       case "reset":
-        if (window.confirm("Xóa toàn bộ tiến độ, bộ thẻ và cài đặt? Hành động này không thể hoàn tác.")) {
+        if (!CC.ui.resetArmed) {
+          CC.ui.resetArmed = true;
+          clearTimeout(CC.ui.resetTimer);
+          CC.ui.resetTimer = setTimeout(function () { CC.ui.resetArmed = false; if (parseRoute().name === "settings") render(true); }, 5000);
+          render(true);
+        } else {
+          CC.ui.resetArmed = false;
           CC.reset(); CC.L = null; CC.R = null; CC.applySettings();
           CC.toast("Đã xóa tiến độ.");
-          go("#/");
-          render();
+          go("#hoc");
         }
         break;
     }
@@ -324,14 +345,7 @@
     else if (act === "theme-set") { CC.settings().theme = el.value; CC.save(); CC.applySettings(); }
     else if (act === "import" && el.files && el.files[0]) {
       var fr = new FileReader();
-      fr.onload = function () {
-        try {
-          CC.importJSON(String(fr.result));
-          CC.L = null; CC.R = null; CC.applySettings();
-          CC.toast("Đã nhập tiến độ.");
-          render();
-        } catch (err) { CC.toast("Không nhập được: " + err.message); }
-      };
+      fr.onload = function () { importText(String(fr.result)); };
       fr.readAsText(el.files[0]);
       el.value = "";
     }

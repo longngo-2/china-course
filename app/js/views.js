@@ -23,6 +23,9 @@
   }
 
   function writeBtn(chars, label, set) {
+    if (window.CC_HOSTED) { // khung xuất bản không cho nhúng trang khác: mở tab mới bằng liên kết thật
+      return '<a class="btn" href="' + esc(CC.writeUrl(set ? { set: set } : { chars: chars })) + '" target="_blank" rel="noopener">' + ICONS.pen + " " + esc(label || "Luyện viết") + "</a>";
+    }
     var attr = set ? 'data-set="' + esc(set) + '"' : 'data-chars="' + esc(chars) + '"';
     return '<button type="button" class="btn" data-act="write" ' + attr + ">" + ICONS.pen + " " + esc(label || "Luyện viết") + "</button>";
   }
@@ -150,23 +153,23 @@
     if (!doneN && !CC.L) {
       h += "<p class=\"eyebrow\">Chào mừng!</p><h1>Bắt đầu học tiếng Trung</h1>" +
         "<p>Lộ trình từ con số 0, bám theo chuẩn HSK 3.0, viết cho người Việt. Mỗi bài khoảng 30 phút: hội thoại → từ vựng → ngữ pháp → luyện tập.</p>" +
-        '<div class="hero-actions"><a class="btn primary big" href="#/lesson/' + order[0] + '">Bắt đầu: ' + esc(CC.lessons[order[0]].title) + '</a>' +
-        '<a class="btn big" href="#/lesson/h1-1-1">Tôi đã biết pinyin → HSK 1</a></div>';
+        '<div class="hero-actions"><a class="btn primary big" href="#bai-' + order[0] + '">Bắt đầu: ' + esc(CC.lessons[order[0]].title) + '</a>' +
+        '<a class="btn big" href="#bai-h1-1-1">Tôi đã biết pinyin → HSK 1</a></div>';
     } else if (next) {
       var nl = CC.lessons[next], loc = CC.locate(next);
       h += '<p class="eyebrow">Tiếp tục học</p><h1>' + esc(nl.title) + "</h1>" +
         "<p class=\"muted\">" + esc(loc ? loc.stage.title + " · " + loc.unit.title : "") + " · khoảng " + nl.minutes + " phút</p>" +
-        '<div class="hero-actions"><a class="btn primary big" href="#/lesson/' + next + '">Học tiếp</a></div>';
+        '<div class="hero-actions"><a class="btn primary big" href="#bai-' + next + '">Học tiếp</a></div>';
     } else {
       h += '<p class="eyebrow">Tuyệt vời!</p><h1>Bạn đã học hết nội dung hiện có 🎉</h1>' +
         "<p>Các bài mới sẽ được bổ sung theo lộ trình. Trong lúc chờ, hãy ôn từ vựng và luyện viết.</p>" +
-        '<div class="hero-actions"><a class="btn primary big" href="#/review">Ôn từ vựng</a><a class="btn big" href="#/write">Luyện viết</a></div>';
+        '<div class="hero-actions"><a class="btn primary big" href="#on-tap">Ôn từ vựng</a><a class="btn big" href="#luyen-viet">Luyện viết</a></div>';
     }
     h += "</section>";
 
     // Nhắc ôn
     if (due > 0) {
-      h += '<a class="due-card" href="#/review"><span class="due-n">' + due + '</span><span><b>Thẻ cần ôn hôm nay</b><br><small>Ôn đều mỗi ngày để nhớ lâu — chỉ mất vài phút.</small></span><span class="go">Ôn ngay →</span></a>';
+      h += '<a class="due-card" href="#on-tap"><span class="due-n">' + due + '</span><span><b>Thẻ cần ôn hôm nay</b><br><small>Ôn đều mỗi ngày để nhớ lâu — chỉ mất vài phút.</small></span><span class="go">Ôn ngay →</span></a>';
     }
 
     // Thống kê
@@ -201,7 +204,7 @@
           var l = CC.lessons[id];
           if (!l) return;
           var done = CC.isDone(id), best = st.best[id];
-          h += '<a class="lrow' + (done ? " done" : "") + (id === next ? " next" : "") + '" href="#/lesson/' + id + '">' +
+          h += '<a class="lrow' + (done ? " done" : "") + (id === next ? " next" : "") + '" href="#bai-' + id + '">' +
             '<span class="ck">' + (done ? ICONS.check : "") + "</span>" +
             '<span class="lt">' + esc(l.title) + "<small>" + CC.lessonVocab(l).length + " từ · " + l.minutes + " phút" +
             (best != null ? " · điểm " + Math.round(best * 100) + "%" : "") + "</small></span>" +
@@ -215,9 +218,9 @@
 
     // Công cụ
     h += '<section class="tools"><h2>Công cụ luyện tập</h2><div class="tool-grid">' +
-      '<a class="tool" href="#/pinyin"><b>Bảng pinyin</b><span>Nghe từng thanh mẫu, vận mẫu và thanh điệu</span></a>' +
-      '<a class="tool" href="#/write"><b>Luyện viết chữ Hán</b><span>Vẽ từng nét bằng chuột hoặc ngón tay</span></a>' +
-      '<a class="tool" href="#/review"><b>Ôn từ vựng</b><span>Thẻ ghi nhớ ngắt quãng, nhớ lâu hơn</span></a>' +
+      '<a class="tool" href="#pinyin"><b>Bảng pinyin</b><span>Nghe từng thanh mẫu, vận mẫu và thanh điệu</span></a>' +
+      '<a class="tool" href="#luyen-viet"><b>Luyện viết chữ Hán</b><span>Vẽ từng nét bằng chuột hoặc ngón tay</span></a>' +
+      '<a class="tool" href="#on-tap"><b>Ôn từ vựng</b><span>Thẻ ghi nhớ ngắt quãng, nhớ lâu hơn</span></a>' +
       "</div></section>";
     return h;
   };
@@ -235,7 +238,7 @@
     var last = L.step === steps.length - 1;
 
     var h = '<article class="lesson">' +
-      '<nav class="crumb" aria-label="Vị trí"><a href="#/">Lộ trình</a> › ' + esc(loc ? loc.stage.title : "") + (loc ? " › " + esc(loc.unit.title) : "") + "</nav>" +
+      '<nav class="crumb" aria-label="Vị trí"><a href="#hoc">Lộ trình</a> › ' + esc(loc ? loc.stage.title : "") + (loc ? " › " + esc(loc.unit.title) : "") + "</nav>" +
       "<h1>" + esc(l.title) + "</h1>";
 
     h += '<ol class="steps" aria-label="Các bước">' + steps.map(function (s, i) {
@@ -428,9 +431,9 @@
     }
     h += '<div class="hero-actions">';
     if (pass) {
-      h += '<a class="btn primary" href="#/review">Ôn từ vựng ngay</a>';
-      if (next) h += '<a class="btn" href="#/lesson/' + next + '">Bài tiếp theo: ' + esc(CC.lessons[next].title) + " →</a>";
-      else h += '<a class="btn" href="#/">Về lộ trình</a>';
+      h += '<a class="btn primary" href="#on-tap">Ôn từ vựng ngay</a>';
+      if (next) h += '<a class="btn" href="#bai-' + next + '">Bài tiếp theo: ' + esc(CC.lessons[next].title) + " →</a>";
+      else h += '<a class="btn" href="#hoc">Về lộ trình</a>';
     } else {
       h += '<button type="button" class="btn primary" data-act="ex-retry">Làm lại</button>' +
         '<button type="button" class="btn" data-act="ex-force">Vẫn đánh dấu hoàn thành</button>';
@@ -446,7 +449,7 @@
     if (!total) {
       return '<section class="page"><h1>Ôn từ vựng</h1><div class="empty"><p class="big">🗂️</p><p><b>Chưa có thẻ nào.</b></p>' +
         "<p>Hoàn thành bài học đầu tiên và từ vựng của bài sẽ tự động được thêm vào đây.</p>" +
-        '<a class="btn primary" href="#/">Bắt đầu học</a></div></section>';
+        '<a class="btn primary" href="#hoc">Bắt đầu học</a></div></section>';
     }
     var R = CC.R;
     if (R && R.finished) return reviewDone(R);
@@ -470,7 +473,7 @@
       var up = CC.srs.upcoming(1)[0];
       h += '<div class="callout ok"><b>🎉 Hôm nay không còn thẻ cần ôn.</b><p>' + (up ? "Thẻ kế tiếp đến hạn sau " + CC.srs.label(Math.max(60000, up.due - Date.now())) + ". " : "") +
         "Bạn có thể ôn trước một ít, hoặc học bài mới.</p></div>" +
-        '<div class="hero-actions"><button type="button" class="btn primary" data-act="rv-start" data-m="ahead">Ôn trước 10 thẻ</button><a class="btn" href="#/">Học bài mới</a></div>';
+        '<div class="hero-actions"><button type="button" class="btn primary" data-act="rv-start" data-m="ahead">Ôn trước 10 thẻ</button><a class="btn" href="#hoc">Học bài mới</a></div>';
     }
     return h + "</section>";
   };
@@ -518,7 +521,7 @@
     var s = R.stats;
     return '<section class="page"><h1>Hoàn thành lượt ôn</h1><div class="summary pass"><div class="score">' + (R.unique || R.total) + '</div><div><b>thẻ đã ôn</b><p>' +
       "Quên " + s[0] + " · Khó " + s[1] + " · Nhớ " + s[2] + " · Dễ " + s[3] + (s[0] ? " (thẻ quên được hỏi lại trong lượt này)" : "") + "</p></div></div>" +
-      '<div class="hero-actions"><button type="button" class="btn primary" data-act="rv-reset">Xong</button><a class="btn" href="#/">Học bài mới</a></div></section>';
+      '<div class="hero-actions"><button type="button" class="btn primary" data-act="rv-reset">Xong</button><a class="btn" href="#hoc">Học bài mới</a></div></section>';
   }
 
   /* ---------- Bảng pinyin ---------- */
@@ -527,14 +530,20 @@
       "<h2>Thanh mẫu — phụ âm đầu</h2>" + initialsHtml() +
       "<h2>Vận mẫu — vần</h2>" + finalsHtml() +
       "<h2>Thanh điệu</h2>" + tonesTable() + toneSetsHtml() +
-      '<p class="muted">Muốn học bài bản? Xem <a href="#/lesson/s0-l1">Chặng 0 — Nhập môn</a>.</p></section>';
+      '<p class="muted">Muốn học bài bản? Xem <a href="#bai-s0-l1">Chặng 0 — Nhập môn</a>.</p></section>';
   };
 
   /* ---------- Luyện viết ---------- */
   V.write = function () {
-    return '<section class="page write-page"><h1>Luyện viết chữ Hán</h1>' +
-      '<p class="muted">Vẽ từng nét bằng chuột hoặc ngón tay. Trang tự kiểm tra thứ tự và hướng nét.</p>' +
-      '<iframe class="write-frame" src="../tools/luyen-viet/index.html" title="Trang luyện viết chữ Hán"></iframe></section>';
+    var head = '<section class="page write-page"><h1>Luyện viết chữ Hán</h1>' +
+      '<p class="muted">Vẽ từng nét bằng chuột hoặc ngón tay. Trang tự kiểm tra thứ tự và hướng nét.</p>';
+    if (window.CC_HOSTED) {
+      var sets = window.CHAR_SETS || [];
+      return head + '<div class="tool-grid">' + sets.map(function (st) {
+        return '<a class="tool" href="' + esc(CC.writeUrl({ set: st.id })) + '" target="_blank" rel="noopener"><b>' + esc(st.name) + "</b><span>" + st.chars.length + " chữ · mở trong tab mới</span></a>";
+      }).join("") + "</div></section>";
+    }
+    return head + '<iframe class="write-frame" src="' + esc(CC.writeUrl({ set: "nhap-mon" })) + '" title="Trang luyện viết chữ Hán"></iframe></section>';
   };
 
   /* ---------- Cài đặt ---------- */
@@ -556,15 +565,25 @@
       }).join("") + "</select></label>" +
       '<p><button type="button" class="btn" data-act="say" data-t="你好！我是你的中文老师。">' + ICONS.sound + " Thử giọng đọc</button></p>";
 
-    h += '<h2>Giao diện</h2><label class="field-row"><span>Chủ đề màu</span><select id="theme" data-act="theme-set">' +
-      [["auto", "Theo hệ thống"], ["light", "Sáng"], ["dark", "Tối"]].map(function (o) {
-        return '<option value="' + o[0] + '"' + (o[0] === s.theme ? " selected" : "") + ">" + o[1] + "</option>";
-      }).join("") + "</select></label>";
+    if (!window.CC_HOSTED) {
+      h += '<h2>Giao diện</h2><label class="field-row"><span>Chủ đề màu</span><select id="theme" data-act="theme-set">' +
+        [["auto", "Theo hệ thống"], ["light", "Sáng"], ["dark", "Tối"]].map(function (o) {
+          return '<option value="' + o[0] + '"' + (o[0] === s.theme ? " selected" : "") + ">" + o[1] + "</option>";
+        }).join("") + "</select></label>";
+    }
 
-    h += "<h2>Dữ liệu của bạn</h2><p class=\"muted\">Tiến độ được lưu <b>trong trình duyệt này</b>. Hãy xuất ra tệp để sao lưu hoặc chuyển sang thiết bị khác.</p>" +
-      '<div class="hero-actions"><button type="button" class="btn" data-act="export">Xuất tiến độ</button>' +
-      '<label class="btn">Nhập tiến độ<input type="file" accept="application/json,.json" data-act="import" hidden></label>' +
-      '<button type="button" class="btn danger" data-act="reset">Xóa toàn bộ tiến độ</button></div>';
+    h += "<h2>Dữ liệu của bạn</h2><p class=\"muted\">Tiến độ được lưu <b>trong trình duyệt này</b>. Hãy xuất ra để sao lưu hoặc chuyển sang thiết bị khác.</p>" +
+      '<div class="hero-actions"><button type="button" class="btn" data-act="export" aria-expanded="' + CC.ui.exportOpen + '">' + (CC.ui.exportOpen ? "Ẩn dữ liệu xuất" : "Xuất tiến độ") + "</button>" +
+      '<label class="btn">Nhập từ tệp<input type="file" accept="application/json,.json" data-act="import" hidden></label>' +
+      '<button type="button" class="btn danger" data-act="reset">' + (CC.ui.resetArmed ? "Bấm lần nữa để xóa hết" : "Xóa toàn bộ tiến độ") + "</button></div>";
+    if (CC.ui.exportOpen) {
+      h += '<div class="export-box"><label for="export-text"><b>Sao lưu</b> — sao chép đoạn này và lưu lại ở nơi an toàn:</label>' +
+        '<textarea id="export-text" readonly rows="6">' + esc(CC.exportJSON()) + '</textarea>' +
+        '<p><button type="button" class="btn small" data-act="copy-export">Sao chép</button></p>' +
+        '<label for="import-text"><b>Khôi phục</b> — dán nội dung đã sao lưu vào đây:</label>' +
+        '<textarea id="import-text" rows="4" placeholder="Dán nội dung tiến độ"></textarea>' +
+        '<p><button type="button" class="btn small" data-act="import-text">Nhập</button></p></div>';
+    }
 
     h += '<h2>Giới thiệu</h2><p class="muted">China Course — lộ trình học tiếng Trung cho người Việt, bám theo HSK 3.0. Nội dung bài học tự biên soạn. Dữ liệu nét chữ: Hanzi Writer / Make Me a Hanzi.</p></section>';
     return h;
@@ -575,6 +594,6 @@
   }
 
   V.notFound = function () {
-    return '<section class="page"><h1>Không tìm thấy trang</h1><p><a class="btn primary" href="#/">Về trang chủ</a></p></section>';
+    return '<section class="page"><h1>Không tìm thấy trang</h1><p><a class="btn primary" href="#hoc">Về trang chủ</a></p></section>';
   };
 })();

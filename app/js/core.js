@@ -6,6 +6,21 @@
 
   CC.addLesson = function (l) { CC.lessons[l.id] = l; };
 
+  /* Trạng thái giao diện tạm thời (không lưu) */
+  CC.ui = { exportOpen: false, resetArmed: false };
+
+  /**
+   * Địa chỉ trang luyện viết. Bản chạy trong khung xuất bản (CC_HOSTED) chỉ truyền được
+   * "#tên-ascii" nên dùng hash; bản thường dùng query.
+   */
+  CC.writeUrl = function (o) {
+    if (window.CC_HOSTED) {
+      var h = o.set ? "bo-" + o.set : "chu-" + CC.hanChars(o.chars).map(function (c) { return c.codePointAt(0).toString(16); }).join("-");
+      return "luyen-viet.html#" + h;
+    }
+    return "../tools/luyen-viet/index.html?" + (o.set ? "bo=" + encodeURIComponent(o.set) : "chu=" + encodeURIComponent(o.chars || "")) + "&che-do=to";
+  };
+
   /* ---------- Tiện ích ---------- */
   var ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
   CC.esc = function (s) {
@@ -327,8 +342,10 @@
   /* ---------- Áp dụng cài đặt giao diện ---------- */
   CC.applySettings = function () {
     var s = state.settings, root = document.documentElement;
-    if (s.theme === "light" || s.theme === "dark") root.setAttribute("data-theme", s.theme);
-    else root.removeAttribute("data-theme");
+    if (!window.CC_HOSTED) { // trong khung xuất bản, giao diện sáng/tối do trang chứa quyết định
+      if (s.theme === "light" || s.theme === "dark") root.setAttribute("data-theme", s.theme);
+      else root.removeAttribute("data-theme");
+    }
     document.body.setAttribute("data-py", s.pinyin ? "1" : "0");
     document.body.setAttribute("data-vi", s.vi ? "1" : "0");
   };

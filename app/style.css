@@ -461,3 +461,16 @@ kbd { border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; font-
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+.export-box { display: grid; gap: 4px; padding: 12px 14px; margin-top: 4px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.export-box textarea { width: 100%; font: .8rem/1.4 ui-monospace, Menlo, Consolas, monospace; padding: 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); resize: vertical; }
+.export-box p { margin: 4px 0 10px; }
+
+/* Vùng an toàn trên điện thoại (khi chạy trong khung xuất bản) */
+.topbar { padding-left: max(16px, calc((100vw - 900px) / 2), env(safe-area-inset-left, 0px)); padding-right: max(16px, calc((100vw - 900px) / 2), env(safe-area-inset-right, 0px)); }
+main { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.tabbar { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+
+/* Thanh trên cùng dính dưới vùng an toàn (tai thỏ/thanh hệ thống); 0 trên trình duyệt thường */
+.topbar { top: env(safe-area-inset-top, 0px); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--bg); }

@@ -124,6 +124,7 @@
   }
 
   function updateUrl() {
+    if (window.HW_STROKES) return;
     try {
       var params = new URLSearchParams();
       if (state.setId === "tu-nhap") params.set("chu", state.list.map(function (e) { return e.c; }).join(""));
@@ -214,6 +215,11 @@
       showHintAfterMisses: 3,
       highlightOnComplete: true,
       charDataLoader: function (c, onLoad, onError) {
+        if (window.HW_STROKES) { // bản xuất bản: nét chữ đi kèm trang, không tải từ mạng
+          var d = window.HW_STROKES[c];
+          if (d) onLoad(d); else onError(new Error("missing"));
+          return;
+        }
         fetch(DATA_URL + encodeURIComponent(c) + ".json")
           .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
           .then(onLoad, onError);
@@ -227,7 +233,9 @@
       onLoadCharDataError: function () {
         if (state.token !== token) return;
         els.strokes.textContent = "—";
-        els.boardMsg.textContent = "Không tải được dữ liệu nét cho chữ “" + ch + "”. Kiểm tra kết nối mạng, hoặc chữ này chưa có trong bộ dữ liệu.";
+        els.boardMsg.textContent = window.HW_STROKES
+          ? "Chữ “" + ch + "” chưa có trong dữ liệu nét của bản này. Hãy chọn một bộ chữ có sẵn."
+          : "Không tải được dữ liệu nét cho chữ “" + ch + "”. Kiểm tra kết nối mạng, hoặc chữ này chưa có trong bộ dữ liệu.";
         els.boardMsg.hidden = false;
       }
     });
@@ -413,11 +421,16 @@
   try { params = new URLSearchParams(location.search); } catch (e) { params = { get: function () { return null; } }; }
   setMode(params.get("che-do") || load(MODE_KEY, "to"));
 
-  var custom = hanChars(params.get("chu"));
+  // Dạng hash (dùng trong khung xuất bản): #bo-<id> hoặc #chu-<mã hex>-<mã hex>…
+  var hashChars = [], hashSet = null, hm = /^#(bo|chu)-(.+)$/.exec(location.hash || "");
+  if (hm && hm[1] === "bo") hashSet = hm[2];
+  else if (hm) hashChars = hm[2].split("-").map(function (x) { try { return String.fromCodePoint(parseInt(x, 16)); } catch (e) { return ""; } }).filter(Boolean);
+
+  var custom = hashChars.length ? hashChars : hanChars(params.get("chu"));
   if (custom.length) {
     els.customInput.value = custom.join("");
     useSet("tu-nhap", custom);
   } else {
-    useSet(params.get("bo") || SETS[0].id);
+    useSet(hashSet || params.get("bo") || SETS[0].id);
   }
 })();
