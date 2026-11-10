@@ -54,6 +54,8 @@ china-course/
 │   ├── luyen-viet-chu-han.md # Luyện viết chữ Hán: nét, thứ tự nét, bộ thủ
 │   └── tai-nguyen.md      # Tài nguyên / repo tham khảo
 ├── data/                  # Dữ liệu từ vựng, chữ Hán, ngữ pháp (CSV/JSON)
+├── tools/
+│   └── luyen-viet/        # Trang luyện viết chữ Hán bằng chuột/cảm ứng
 └── templates/
     ├── bai-hoc.md         # Mẫu chuẩn cho mỗi bài học
     └── giay-o-mi.svg      # Giấy ô 米字格 A4 để in
@@ -63,7 +65,8 @@ china-course/
 
 1. Đọc [docs/phuong-phap.md](docs/phuong-phap.md) để nắm cách học và [docs/luyen-viet-chu-han.md](docs/luyen-viet-chu-han.md) để luyện viết chữ.
 2. Bắt đầu từ [Chặng 0 — Nhập môn](lessons/00-nhap-mon), học tuần tự từng unit.
-3. Cuối mỗi chặng làm phần **Kiểm tra đầu ra** trước khi sang chặng tiếp theo.
+3. Luyện viết chữ trên màn hình với [trang luyện viết](tools/luyen-viet) (mở `tools/luyen-viet/index.html` hoặc qua GitHub Pages).
+4. Cuối mỗi chặng làm phần **Kiểm tra đầu ra** trước khi sang chặng tiếp theo.
 
 ## Đóng góp
 

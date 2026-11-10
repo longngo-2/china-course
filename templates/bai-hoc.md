@@ -48,6 +48,8 @@ grammar: []            # id điểm ngữ pháp trong data/grammar/*.csv
 |---|---|---|---|---|---|---|
 | 你 | 亻 | trái – phải | 7 | 撇 竖 撇 横钩 竖钩 撇 点 | nhĩ | người (亻) đứng cạnh bạn |
 
+✍️ Luyện viết các chữ trong bài: `tools/luyen-viet/?chu=<các chữ>&che-do=to` (xem [tools/luyen-viet](../tools/luyen-viet/README.md#tham-số-url)).
+
 ## 5. Luyện tập
 - [ ] Nghe: …
 - [ ] Nói (shadowing): …

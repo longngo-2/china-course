@@ -128,5 +128,6 @@ Thuật ngữ ngữ pháp dùng thống nhất (lần đầu xuất hiện ghi k
 - [ ] Hội thoại không dùng từ vượt cấp mà không chú thích
 - [ ] Mỗi điểm ngữ pháp có ≥ 3 ví dụ và phần lỗi hay mắc
 - [ ] Có bài tập + đáp án trong `<details>`
+- [ ] Có link luyện viết các chữ mới (`tools/luyen-viet/?chu=…`)
 - [ ] Không chép nội dung có bản quyền; đã ghi nguồn
 - [ ] Bảng Markdown hiển thị đúng trên GitHub (xem Preview)

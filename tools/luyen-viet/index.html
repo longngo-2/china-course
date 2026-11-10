@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Luyện viết chữ Hán</title>
+  <meta name="description" content="Luyện viết chữ Hán bằng chuột hoặc cảm ứng, kiểm tra thứ tự nét — China Course">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Luyện viết chữ Hán</h1>
+    <p class="sub">Vẽ từng nét bằng chuột hoặc ngón tay — trang tự kiểm tra thứ tự và hướng nét.</p>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Tùy chọn">
+      <label class="field">
+        <span>Bộ chữ</span>
+        <select id="set-select"></select>
+      </label>
+
+      <div class="field">
+        <span>Chế độ</span>
+        <div class="seg" role="radiogroup" aria-label="Chế độ">
+          <button type="button" role="radio" data-mode="xem">Xem mẫu</button>
+          <button type="button" role="radio" data-mode="to">Tập tô</button>
+          <button type="button" role="radio" data-mode="viet">Tự viết</button>
+        </div>
+      </div>
+
+      <form class="field custom" id="custom-form">
+        <span>Tự nhập chữ</span>
+        <div class="row">
+          <input id="custom-input" type="text" placeholder="VD: 你好谢谢" autocomplete="off" lang="zh">
+          <button type="submit">Luyện</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="practice">
+      <div class="board-wrap">
+        <div id="board" class="board" aria-label="Ô luyện viết"></div>
+        <div id="board-msg" class="board-msg" hidden></div>
+      </div>
+
+      <aside class="info">
+        <div class="glyph" id="glyph" lang="zh">你</div>
+        <dl>
+          <div><dt>Pinyin</dt><dd id="pinyin">—</dd></div>
+          <div><dt>Hán Việt</dt><dd id="hanviet">—</dd></div>
+          <div><dt>Nghĩa</dt><dd id="meaning">—</dd></div>
+          <div><dt>Số nét</dt><dd id="strokes">—</dd></div>
+        </dl>
+        <p class="status" id="status" aria-live="polite"></p>
+      </aside>
+    </section>
+
+    <nav class="actions" aria-label="Điều khiển">
+      <button type="button" id="prev" title="Chữ trước (←)">◀ Trước</button>
+      <button type="button" id="demo" title="Xem cách viết (D)">Xem nét</button>
+      <button type="button" id="reset" title="Viết lại (R)">Viết lại</button>
+      <button type="button" id="next" class="primary" title="Chữ tiếp (→)">Tiếp ▶</button>
+    </nav>
+
+    <section class="progress">
+      <div class="progress-head">
+        <span id="counter">0 / 0</span>
+        <span class="legend">
+          <i class="dot ok"></i>không lỗi
+          <i class="dot warn"></i>1–2 lỗi
+          <i class="dot bad"></i>≥ 3 lỗi
+        </span>
+      </div>
+      <ol id="strip" class="strip"></ol>
+      <p id="summary" class="summary" hidden></p>
+    </section>
+
+    <details class="help">
+      <summary>Hướng dẫn</summary>
+      <ul>
+        <li><b>Xem mẫu</b>: xem hoạt hình thứ tự nét (lặp lại). Phần bộ thủ được tô màu khác.</li>
+        <li><b>Tập tô</b>: viết đè lên chữ mờ. Sai 3 lần ở một nét thì trang sẽ gợi ý nét đó.</li>
+        <li><b>Tự viết</b>: không có chữ mờ, chỉ có pinyin và nghĩa — viết từ trí nhớ.</li>
+        <li>Chữ viết ở chế độ <b>Tự viết</b> mà sai từ 3 lần trở lên được đưa vào bộ <b>“Chữ cần ôn”</b>; viết lại không lỗi thì được gỡ ra.</li>
+        <li>Phím tắt: <kbd>←</kbd> <kbd>→</kbd> chuyển chữ, <kbd>R</kbd> viết lại, <kbd>D</kbd> xem nét.</li>
+        <li>Mẹo: luyện thứ tự nét ở đây, rồi viết lại trên giấy ô 米字格 để luyện tỉ lệ chữ.</li>
+      </ul>
+    </details>
+  </main>
+
+  <footer class="foot">
+    Dữ liệu nét: <a href="https://github.com/chanind/hanzi-writer-data">hanzi-writer-data</a>
+    (từ <a href="https://github.com/skishore/makemeahanzi">Make Me a Hanzi</a>) ·
+    Thư viện: <a href="https://hanziwriter.org">Hanzi Writer</a>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.3/dist/hanzi-writer.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

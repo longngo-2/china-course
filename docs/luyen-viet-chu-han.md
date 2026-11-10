@@ -20,6 +20,7 @@ Ngày nay phần lớn thời gian ta **gõ pinyin**, nên không cần viết t
   In sẵn: [templates/giay-o-mi.svg](../templates/giay-o-mi.svg) (khổ A4, mở bằng trình duyệt rồi in).
 - Bút chì hoặc bút bi ngòi vừa (tránh bút quá to khi mới học).
 - App xem **hoạt hình thứ tự nét**: Pleco, Hanzii, hoặc [Hanzi Writer](https://hanziwriter.org) (mã nguồn mở).
+- **Trang luyện viết của khóa:** [tools/luyen-viet](../tools/luyen-viet) — vẽ bằng chuột/cảm ứng, chấm thứ tự nét, lưu chữ cần ôn.
 
 ## 3. Tám nét cơ bản (基本笔画)
 
@@ -131,9 +132,9 @@ Ví dụ chữ **你** nǐ — *nhĩ* — bạn:
 
 1. **Phân tích:** 你 = 亻(người) + 尔. Bố cục trái – phải, 7 nét.
 2. **Xem thứ tự nét:** 撇 → 竖 → 撇 → 横钩 → 竖钩 → 撇 → 点 (dùng app xem hoạt hình).
-3. **Tô theo mẫu:** 2–3 lần trên giấy có chữ mờ.
+3. **Tô theo mẫu:** 2–3 lần trên giấy có chữ mờ, hoặc chế độ *Tập tô* trên [trang luyện viết](../tools/luyen-viet).
 4. **Viết theo mẫu:** 5–8 lần trong ô 米字格, **vừa viết vừa đọc to** “nǐ – bạn”.
-5. **Viết từ trí nhớ:** che mẫu, viết lại, so sánh. Sai nét nào → viết lại riêng phần đó.
+5. **Viết từ trí nhớ:** che mẫu, viết lại, so sánh (hoặc chế độ *Tự viết* trên trang luyện viết). Sai nét nào → viết lại riêng phần đó.
 
 Sau đó viết chữ trong **từ và câu**: 你好, 你们, 你叫什么名字？
 
