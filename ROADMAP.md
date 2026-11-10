@@ -1,5 +1,7 @@
 # Lộ trình chi tiết
 
+> 📱 Bài học tương tác của các chặng đã biên soạn có trong ứng dụng: [`app/index.html`](app/index.html).
+
 Mỗi chặng gồm: **Mục tiêu (can-do)** → **Nội dung** → **Chủ đề (unit)** → **Kiểm tra đầu ra**.
 Khung năng lực bám theo HSK 3.0 với 5 kỹ năng: **Nghe · Nói · Đọc · Viết · Dịch** (Dịch bắt đầu từ trung cấp).
 

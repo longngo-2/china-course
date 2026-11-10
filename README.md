@@ -4,7 +4,20 @@ Lộ trình tự học tiếng Trung (Phổ thông / 普通话) **từ con số 
 **HSK 3.0** — *Tiêu chuẩn trình độ tiếng Trung trong giáo dục tiếng Trung quốc tế*
 (国际中文教育中文水平等级标准, GF 0025-2021), viết bằng tiếng Việt và tận dụng lợi thế **âm Hán Việt**.
 
-> 🚧 Repo đang ở giai đoạn phác thảo khung. Xem [ROADMAP.md](ROADMAP.md) để biết chi tiết từng chặng.
+## 🚀 Bắt đầu học ngay
+
+Mở **[`app/index.html`](app/index.html)** bằng trình duyệt (Chrome, Edge hoặc Safari để nghe được giọng đọc tiếng Trung) — không cần cài đặt gì. Cần có mạng để tải thư viện luyện viết.
+
+Hoặc bật **GitHub Pages** (Settings → Pages → Deploy from a branch → `/ (root)`) để học trên điện thoại tại `https://<tên-tài-khoản>.github.io/china-course/`.
+
+Ứng dụng gồm:
+- **Lộ trình & bài học từng bước**: hội thoại → từ vựng → ngữ pháp → luyện tập (chọn đáp án, sắp xếp câu, nghe chọn nghĩa)
+- **Nghe phát âm** từng câu, từng từ (giọng đọc của trình duyệt)
+- **Ôn từ vựng** bằng thẻ ghi nhớ ngắt quãng, tự thêm từ sau mỗi bài
+- **Bảng pinyin** tương tác và **luyện viết chữ Hán** bằng chuột/cảm ứng
+- Lưu tiến độ trong trình duyệt, có xuất/nhập để sao lưu
+
+Nội dung hiện có: **Chặng 0 — Nhập môn** (4 bài) và **HSK 1 — Unit 1–3** (5 bài). Các bài còn lại đang được biên soạn — xem [ROADMAP.md](ROADMAP.md) và cách thêm bài trong [app/content/README.md](app/content/README.md).
 
 ## Bản đồ lộ trình
 
@@ -53,6 +66,9 @@ china-course/
 │   ├── huong-dan-viet.md  # Quy chuẩn soạn bài học
 │   ├── luyen-viet-chu-han.md # Luyện viết chữ Hán: nét, thứ tự nét, bộ thủ
 │   └── tai-nguyen.md      # Tài nguyên / repo tham khảo
+├── index.html             # Chuyển hướng tới app/ (cho GitHub Pages)
+├── app/                   # Ứng dụng học: lộ trình, bài học, ôn thẻ, pinyin
+│   └── content/           # Nội dung bài học (JS) — xem README trong thư mục
 ├── data/                  # Dữ liệu từ vựng, chữ Hán, ngữ pháp (CSV/JSON)
 ├── tools/
 │   └── luyen-viet/        # Trang luyện viết chữ Hán bằng chuột/cảm ứng
@@ -63,6 +79,7 @@ china-course/
 
 ## Cách dùng
 
+0. Mở [ứng dụng học](app/index.html) và bắt đầu từ Chặng 0.
 1. Đọc [docs/phuong-phap.md](docs/phuong-phap.md) để nắm cách học và [docs/luyen-viet-chu-han.md](docs/luyen-viet-chu-han.md) để luyện viết chữ.
 2. Bắt đầu từ [Chặng 0 — Nhập môn](lessons/00-nhap-mon), học tuần tự từng unit.
 3. Luyện viết chữ trên màn hình với [trang luyện viết](tools/luyen-viet) (mở `tools/luyen-viet/index.html` hoặc qua GitHub Pages).

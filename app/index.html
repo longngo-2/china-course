@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>China Course — Học tiếng Trung</title>
+  <meta name="description" content="Lộ trình học tiếng Trung cho người Việt, bám theo HSK 3.0: bài học, nghe đọc, ôn từ vựng, luyện viết chữ Hán.">
+  <meta name="theme-color" content="#c0392b">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23c0392b'/%3E%3Ctext x='32' y='46' font-size='38' text-anchor='middle' fill='white' font-family='sans-serif'%3E汉%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-py="1" data-vi="1">
+  <a class="skip" href="#app">Bỏ qua điều hướng</a>
+
+  <header class="topbar">
+    <a class="brand" href="#/" aria-label="China Course — trang chủ"><span class="seal" aria-hidden="true">汉</span><span>China Course</span></a>
+    <nav class="topnav" aria-label="Chính">
+      <a href="#/" data-route="home">Học</a>
+      <a href="#/review" data-route="review">Ôn tập <span class="due-badge" hidden></span></a>
+      <a href="#/pinyin" data-route="pinyin">Pinyin</a>
+      <a href="#/write" data-route="write">Luyện viết</a>
+      <a href="#/settings" data-route="settings">Cài đặt</a>
+    </nav>
+  </header>
+
+  <main id="app" tabindex="-1">
+    <noscript><p style="padding:24px">Ứng dụng cần JavaScript để chạy. Hãy bật JavaScript trong trình duyệt.</p></noscript>
+  </main>
+
+  <nav class="tabbar" aria-label="Chính (điện thoại)">
+    <a href="#/" data-route="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 012-2h13v15H6a2 2 0 00-2 2V5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 7h7M8 11h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 20a2 2 0 002 2h13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Học</span></a>
+    <a href="#/review" data-route="review"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="14" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 4h12a2 2 0 012 2v10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Ôn tập</span><i class="due-badge" hidden></i></a>
+    <a href="#/pinyin" data-route="pinyin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H10l-4 4v-4H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Pinyin</span></a>
+    <a href="#/write" data-route="write"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5a2 2 0 012.8 0l.2.2a2 2 0 010 2.8L8 19l-4 1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Viết</span></a>
+    <a href="#/settings" data-route="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg><span>Cài đặt</span></a>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="modal" hidden></div>
+
+  <script src="js/core.js"></script>
+  <script src="content/pinyin.js"></script>
+  <script src="content/stage0.js"></script>
+  <script src="content/hsk1.js"></script>
+  <script src="content/course.js"></script>
+  <script src="js/views.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
