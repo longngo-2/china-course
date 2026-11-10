@@ -474,3 +474,9 @@ main { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 /* Thanh trên cùng dính dưới vùng an toàn (tai thỏ/thanh hệ thống); 0 trên trình duyệt thường */
 .topbar { top: env(safe-area-inset-top, 0px); }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--bg); }
+
+.diag { display: grid; gap: 4px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); margin-bottom: 12px; }
+.diag-row { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px dashed var(--border); font-size: .92rem; }
+.diag-row:last-child { border-bottom: 0; }
+.diag-row b { text-align: right; }
+.okc { color: var(--ok); } .badc { color: var(--bad); }

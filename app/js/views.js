@@ -547,6 +547,38 @@
   };
 
   /* ---------- Cài đặt ---------- */
+  /* Chẩn đoán âm thanh: chỉ ra nguyên nhân thường gặp khi không nghe thấy gì */
+  function ttsDiagHtml() {
+    var d = CC.tts.diagnose(), last = d.last, rows = [], tips = [];
+    rows.push(["Trình duyệt hỗ trợ đọc", d.supported ? "Có" : "Không", d.supported]);
+    if (d.supported) {
+      rows.push(["Số giọng đọc trên thiết bị", String(d.total), d.total > 0]);
+      rows.push(["Giọng tiếng Trung", d.zh ? d.zh + (d.picked ? " · đang dùng: " + d.picked : "") : "Không có", d.zh > 0]);
+      var map = { queued: "Đang chờ…", started: "Đang phát", ended: "Đã phát xong", silent: "Trình duyệt nhận lệnh nhưng không phát gì", error: "Lỗi: " + (last && last.error) };
+      if (last) rows.push(["Lần thử gần nhất", map[last.state] || last.state, last.state === "started" || last.state === "ended"]);
+    }
+    if (!d.supported) {
+      tips.push("Trình duyệt này không hỗ trợ đọc văn bản. Hãy mở bằng **Chrome, Edge hoặc Safari** (bản mới).");
+    } else {
+      if (d.total === 0) tips.push("Trình duyệt chưa báo giọng đọc nào. Nhấn **Quét lại giọng**; nếu vẫn bằng 0 thì thiết bị chưa có giọng đọc nào hoặc trình duyệt đang chặn (một số trình duyệt trong ứng dụng, Firefox trên Linux, Chrome trên Linux không có giọng sẵn).");
+      else if (!d.zh) tips.push("Thiết bị có giọng đọc nhưng **chưa có giọng tiếng Trung**. Cần cài thêm: " +
+        "**Windows** — Cài đặt → Thời gian & ngôn ngữ → Giọng nói → Thêm giọng → Chinese (Simplified). " +
+        "**Android** — Cài đặt → Quản lý chung → Chuyển văn bản thành giọng nói → Google → cài dữ liệu tiếng Trung. " +
+        "**iPhone/iPad** — Cài đặt → Trợ năng → Nội dung được đọc → Giọng nói → Tiếng Trung. " +
+        "**Mac** — Cài đặt hệ thống → Trợ năng → Nội dung được đọc → Giọng hệ thống → Quản lý giọng nói → Chinese.");
+      if (last && (last.state === "silent" || (last.state === "error" && last.error === "not-allowed"))) {
+        tips.push("Trình duyệt chặn hoặc không phát được. Hãy kiểm tra: **âm lượng media** (không phải âm chuông), **tab chưa bị tắt tiếng**, **công tắc im lặng** bên hông iPhone đang bật chuông, tai nghe/Bluetooth, rồi nhấn lại “Thử giọng đọc”. Nếu đang mở trong ứng dụng khác (Zalo, Messenger, Facebook…), hãy mở bằng Chrome/Safari.");
+      }
+      if (last && last.state === "error" && last.error !== "not-allowed") tips.push("Giọng đọc báo lỗi “" + CC.esc(last.error) + "”. Thử chọn một giọng khác trong danh sách bên dưới, hoặc nhấn **Quét lại giọng**.");
+    }
+    var h = '<div class="diag">' + rows.map(function (r) {
+      return '<div class="diag-row"><span>' + esc(r[0]) + '</span><b class="' + (r[2] ? "okc" : "badc") + '">' + (r[2] ? "✓ " : "✗ ") + esc(r[1]) + "</b></div>";
+    }).join("") + "</div>";
+    if (tips.length) h += '<div class="callout warn"><b>Cách khắc phục</b>' + tips.map(function (t) { return "<p>" + fmt(t) + "</p>"; }).join("") + "</div>";
+    else if (last && (last.state === "started" || last.state === "ended")) h += '<div class="callout ok"><p>Giọng đọc hoạt động. Nếu vẫn không nghe thấy gì, hãy tăng âm lượng thiết bị.</p></div>';
+    return h;
+  }
+
   V.settings = function () {
     var s = CC.settings(), zh = CC.tts.zhVoices();
     var h = '<section class="page settings"><h1>Cài đặt</h1>';
@@ -556,14 +588,13 @@
       toggleRow("pinyin", "Hiện pinyin", "Tắt để tự thử đọc chữ Hán trước", s.pinyin) +
       toggleRow("vi", "Hiện bản dịch tiếng Việt", "Tắt thì nhấn vào dòng để xem dịch", s.vi);
 
-    h += "<h2>Giọng đọc</h2>";
-    if (!CC.tts.supported) h += '<div class="callout warn"><p>Trình duyệt này không hỗ trợ đọc văn bản. Hãy dùng Chrome, Edge hoặc Safari.</p></div>';
-    else if (!zh.length) h += '<div class="callout warn"><p>Chưa tìm thấy giọng tiếng Trung trên thiết bị. Trên Windows/Android/iOS/macOS thường có sẵn hoặc cài thêm trong phần ngôn ngữ của hệ thống.</p></div>';
+    h += "<h2>Giọng đọc</h2>" + ttsDiagHtml();
     h += '<label class="field-row"><span>Tốc độ: <b id="rate-val">' + s.rate.toFixed(2) + '×</b></span><input type="range" id="rate" min="0.5" max="1.2" step="0.05" value="' + s.rate + '" data-act="rate-set"></label>' +
       '<label class="field-row"><span>Giọng</span><select id="voice" data-act="voice-set"><option value="">Tự động</option>' + zh.map(function (v) {
         return '<option value="' + esc(v.name) + '"' + (v.name === s.voice ? " selected" : "") + ">" + esc(v.name + " (" + v.lang + ")") + "</option>";
       }).join("") + "</select></label>" +
-      '<p><button type="button" class="btn" data-act="say" data-t="你好！我是你的中文老师。">' + ICONS.sound + " Thử giọng đọc</button></p>";
+      '<p class="actions-row"><button type="button" class="btn" data-act="say" data-t="你好！我是你的中文老师。">' + ICONS.sound + " Thử giọng đọc</button>" +
+      '<button type="button" class="btn" data-act="tts-rescan">Quét lại giọng</button></p>';
 
     if (!window.CC_HOSTED) {
       h += '<h2>Giao diện</h2><label class="field-row"><span>Chủ đề màu</span><select id="theme" data-act="theme-set">' +

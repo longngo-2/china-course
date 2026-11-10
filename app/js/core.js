@@ -295,8 +295,25 @@
   function warnNoVoice() {
     if (warned) return;
     warned = true;
-    CC.toast("Thiết bị chưa có giọng đọc tiếng Trung. Hãy thử Chrome/Edge/Safari hoặc cài giọng “Chinese (Mandarin)” trong cài đặt hệ thống.");
+    CC.toast("Chưa có giọng đọc tiếng Trung trên thiết bị này. Vào Cài đặt → Giọng đọc để xem cách khắc phục.");
   }
+
+  var hinted = false;
+  function hintSilent() {
+    if (hinted) return;
+    hinted = true;
+    CC.toast("Không nghe thấy âm thanh? Vào Cài đặt → Giọng đọc để kiểm tra nguyên nhân.");
+  }
+
+  /** Kết quả lần phát gần nhất: queued → started → ended, hoặc error / silent (trình duyệt im lặng). */
+  tts.last = null;
+  tts.onChange = null;
+  function changed() { if (tts.onChange) { try { tts.onChange(); } catch (e) { /* bỏ qua */ } } }
+
+  tts.diagnose = function () {
+    var v = tts.pick();
+    return { supported: tts.supported, total: tts.voices.length, zh: tts.zhVoices().length, picked: v ? v.name + " (" + v.lang + ")" : "", last: tts.last };
+  };
 
   tts.stop = function () {
     seqToken++;
@@ -306,20 +323,33 @@
   tts.speak = function (text, opts) {
     if (!tts.supported) { warnNoVoice(); return Promise.resolve(false); }
     return new Promise(function (resolve) {
-      try { window.speechSynthesis.cancel(); } catch (e) { /* bỏ qua */ }
+      var synth = window.speechSynthesis;
+      refreshVoices();
+      try { synth.cancel(); synth.resume(); } catch (e) { /* bỏ qua */ }
       var u = new window.SpeechSynthesisUtterance(text);
       var v = tts.pick();
       u.lang = "zh-CN";
       if (v) { u.voice = v; u.lang = v.lang; }
       else if (tts.voices.length) warnNoVoice();
       u.rate = (opts && opts.rate) || state.settings.rate || 0.85;
-      u.onend = function () { resolve(true); };
+      u.volume = 1;
+      var rec = (tts.last = { text: text, state: "queued", at: Date.now(), voice: v ? v.name : "" });
+      u.onstart = function () { rec.state = "started"; changed(); };
+      u.onend = function () { if (rec.state !== "error") rec.state = "ended"; changed(); resolve(true); };
       u.onerror = function (e) {
-        if (e && e.error && e.error !== "canceled" && e.error !== "interrupted") warnNoVoice();
+        var code = (e && e.error) || "unknown";
+        if (code === "canceled" || code === "interrupted") { resolve(false); return; }
+        rec.state = "error"; rec.error = code;
+        if (code === "not-allowed") hintSilent(); else warnNoVoice();
+        changed();
         resolve(false);
       };
+      // Một số trình duyệt nhận lệnh nhưng không phát và không báo lỗi gì cả
       setTimeout(function () {
-        try { window.speechSynthesis.speak(u); } catch (e) { resolve(false); }
+        if (rec.state === "queued") { rec.state = "silent"; hintSilent(); changed(); }
+      }, 3000);
+      setTimeout(function () {
+        try { synth.speak(u); } catch (e) { rec.state = "error"; rec.error = "exception"; changed(); resolve(false); }
       }, 30);
     });
   };

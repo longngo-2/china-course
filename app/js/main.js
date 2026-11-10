@@ -215,6 +215,7 @@
 
     switch (act) {
       case "say": flash(el); CC.tts.speak(d.t); break;
+      case "tts-rescan": CC.tts.voices = (window.speechSynthesis && window.speechSynthesis.getVoices()) || []; CC.toast("Đã quét lại: " + CC.tts.voices.length + " giọng, " + CC.tts.zhVoices().length + " giọng tiếng Trung."); render(true); break;
       case "say-slow": flash(el); CC.tts.speak(d.t, { rate: 0.55 }); break;
       case "tile": {
         flash(el);
@@ -369,6 +370,10 @@
   });
 
   /* ---------- Khởi động ---------- */
+  CC.tts.onChange = function () { if (parseRoute().name === "settings") render(true); };
+  if (window.speechSynthesis && window.speechSynthesis.addEventListener) {
+    window.speechSynthesis.addEventListener("voiceschanged", function () { if (parseRoute().name === "settings") render(true); });
+  }
   CC.applySettings();
   render();
 })();
