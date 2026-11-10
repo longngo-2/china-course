@@ -1,3 +1,17 @@
+---
+level: hsk1            # nhap-mon | hsk1 … hsk6 | hsk7-9
+unit: 1
+lesson: 1
+title: "<Tên bài>"
+duration: 45           # phút
+objectives:
+  - <can-do 1>
+vocab: []              # danh sách chữ Hán từ mới
+grammar: []            # id điểm ngữ pháp trong data/grammar/*.csv
+---
+
+<!-- Quy chuẩn viết: docs/huong-dan-viet.md -->
+
 # [Chặng X] Unit Y — Bài Z: <Tên bài>
 
 > **Mục tiêu:** sau bài này người học có thể … (1–3 câu can-do)
@@ -25,8 +39,8 @@
 ### Điểm 1: <tên>
 - **Cấu trúc:** …
 - **Cách dùng:** …
-- **Ví dụ:** …
-- **Lỗi người Việt hay mắc:** …
+- **Ví dụ:** … (≥ 3 câu)
+- **Lỗi người Việt hay mắc:** ✗ … → ✓ …
 
 ## 4. Chữ Hán trong bài
 | Chữ | Bộ thủ | Số nét | Hán Việt | Mẹo nhớ |

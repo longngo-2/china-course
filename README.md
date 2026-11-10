@@ -50,6 +50,7 @@ china-course/
 │   └── 07-hsk7-9/
 ├── docs/
 │   ├── phuong-phap.md     # Cách học: SRS, Hán Việt, shadowing, input
+│   ├── huong-dan-viet.md  # Quy chuẩn soạn bài học
 │   └── tai-nguyen.md      # Tài nguyên / repo tham khảo
 ├── data/                  # Dữ liệu từ vựng, chữ Hán, ngữ pháp (CSV/JSON)
 └── templates/
@@ -64,4 +65,5 @@ china-course/
 
 ## Đóng góp
 
-Mỗi bài học mới nên dùng mẫu [templates/bai-hoc.md](templates/bai-hoc.md).
+Mỗi bài học mới dùng mẫu [templates/bai-hoc.md](templates/bai-hoc.md) và tuân theo
+[docs/huong-dan-viet.md](docs/huong-dan-viet.md) (pinyin, Hán Việt, ngữ pháp, bản quyền, checklist).
