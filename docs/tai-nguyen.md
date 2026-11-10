@@ -12,6 +12,8 @@
 ## Từ điển & công cụ
 - [0reveur0/WenZi](https://github.com/0reveur0/WenZi) — từ điển Trung–Việt (CC-CEDICT)
 - [krmanik/Anki-xiehanzi](https://github.com/krmanik/Anki-xiehanzi) — luyện viết chữ trong Anki
+- [chanind/hanzi-writer](https://github.com/chanind/hanzi-writer) — hoạt hình thứ tự nét, luyện viết trên web
+- [skishore/makemeahanzi](https://github.com/skishore/makemeahanzi) — dữ liệu nét và cấu tạo chữ Hán
 
 ## Danh sách tài nguyên khác
 - [melling/LanguageLearning](https://github.com/melling/LanguageLearning)

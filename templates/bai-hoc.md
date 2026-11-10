@@ -43,8 +43,10 @@ grammar: []            # id điểm ngữ pháp trong data/grammar/*.csv
 - **Lỗi người Việt hay mắc:** ✗ … → ✓ …
 
 ## 4. Chữ Hán trong bài
-| Chữ | Bộ thủ | Số nét | Hán Việt | Mẹo nhớ |
-|---|---|---|---|---|
+<!-- Cách luyện: docs/luyen-viet-chu-han.md -->
+| Chữ | Bộ thủ | Bố cục | Số nét | Thứ tự nét | Hán Việt | Mẹo nhớ |
+|---|---|---|---|---|---|---|
+| 你 | 亻 | trái – phải | 7 | 撇 竖 撇 横钩 竖钩 撇 点 | nhĩ | người (亻) đứng cạnh bạn |
 
 ## 5. Luyện tập
 - [ ] Nghe: …
