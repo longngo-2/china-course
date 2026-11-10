@@ -88,13 +88,13 @@
 
   /* ---------- Thông báo nhỏ ---------- */
   var toastTimer;
-  CC.toast = function (msg) {
+  CC.toast = function (msg, action) {
     var el = document.getElementById("toast");
     if (!el) return;
-    el.textContent = msg;
+    el.innerHTML = CC.esc(msg) + (action ? ' <a class="toast-link" href="' + CC.esc(action.href) + '">' + CC.esc(action.label) + "</a>" : "");
     el.hidden = false;
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { el.hidden = true; }, 4200);
+    toastTimer = setTimeout(function () { el.hidden = true; }, action ? 9000 : 4200);
   };
 
   /* ---------- Lưu tiến độ ---------- */
@@ -295,14 +295,14 @@
   function warnNoVoice() {
     if (warned) return;
     warned = true;
-    CC.toast("Chưa có giọng đọc tiếng Trung trên thiết bị này. Vào Cài đặt → Giọng đọc để xem cách khắc phục.");
+    CC.toast("Thiết bị này chưa có giọng đọc tiếng Trung nên chưa phát được âm thanh.", { href: "#cai-dat", label: "Xem cách khắc phục →" });
   }
 
   var hinted = false;
   function hintSilent() {
     if (hinted) return;
     hinted = true;
-    CC.toast("Không nghe thấy âm thanh? Vào Cài đặt → Giọng đọc để kiểm tra nguyên nhân.");
+    CC.toast("Không nghe thấy âm thanh?", { href: "#cai-dat", label: "Kiểm tra nguyên nhân →" });
   }
 
   /** Kết quả lần phát gần nhất: queued → started → ended, hoặc error / silent (trình duyệt im lặng). */
